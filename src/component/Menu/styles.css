@@ -1,0 +1,17 @@
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 40%;
+    margin: auto;
+}
+
+.navbar-nav a {
+    font-size: 16px;
+    color: #a0a0a0;
+    font-weight: 700;
+}
+
+.navbar-nav a:hover {
+    color: aqua;
+}

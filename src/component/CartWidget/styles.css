@@ -1,0 +1,14 @@
+.amount-wrapper {
+    position: absolute;
+    background-color: lightsalmon;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid aliceblue;
+    color: black;
+    font-weight: 600;
+    top: 30px;
+}
