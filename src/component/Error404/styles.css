@@ -1,0 +1,12 @@
+.errorPage {
+    padding-right: 205px;
+    margin: 7% auto 0;
+    max-width: 390px;
+    min-height: 180px;
+    padding: 30px 0 15px;
+}
+
+ins {
+    color: #777;
+    text-decoration: none;
+}

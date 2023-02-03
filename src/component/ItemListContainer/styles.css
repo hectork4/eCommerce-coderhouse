@@ -4,3 +4,23 @@
     text-align: center;
     font-family: fantasy;
 }
+
+.items-container {
+    padding: 0 20px;
+}
+
+.card-item {
+    cursor: pointer;
+    height: 600px;
+}
+
+.card-item .item-image {
+    object-fit: cover;
+    max-height: 250px;
+}
+
+@media (min-width: 992px) {
+    .items-row {
+        width: 33.33%;
+    }
+}
