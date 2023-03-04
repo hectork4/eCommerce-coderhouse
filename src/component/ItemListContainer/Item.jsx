@@ -1,25 +1,31 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import UserContext from '../../globalStore/UserContext';
+import { types } from '../../globalStore/UserReducer';
 
 const Item = ({
     article:
-    { buyer_price: {display}, 
-    description, slug,
-    image, title, 
-    photos:[ photo ] }, addItems
+    { price, 
+    description,
+    picture, title, 
+    uid }
     }) => {
     const [loading, setLoading] = useState(true);
+    const [ , dispatch]  = useContext(UserContext);
     const imageLoaded = () => {
         setLoading(false);
     }
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate(`/item/${slug}`)
+        navigate(`/item/${uid}`)
     }
     
     const increaseCart = (e) => {
-        addItems();
         e.stopPropagation();
+        dispatch({
+            type: types.increase,
+            payload: {productId: uid}
+        })
     }
 
     return (
@@ -27,7 +33,7 @@ const Item = ({
             <div className="card card-item" onClick={handleClick}>
                 <img 
                 styles={loading ? {display: 'none'} : ''} 
-                src={photo._links.large_crop.href} 
+                src={picture} 
                 className="card-img-top item-image" alt={`Article about ${title}`} 
                 onLoad={imageLoaded} /> 
                 <div className="card-body flex-column" style={{display: 'block'}}>

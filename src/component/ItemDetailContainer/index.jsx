@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import UserContext from '../../globalStore/UserContext';
+import { types } from '../../globalStore/UserReducer';
+import { useFirebase } from '../../hooks/useFirebase';
+import Error404 from '../Error404';
 import './styles.css';
 
-const ItemDetailContainer = ({addItems}) => {
+
+const ItemDetailContainer = () => {
 
     const { id } = useParams();
     const [details, setDetails] = useState();
+    const [error, setError] = useState(false);
     const [loading, setLoading] = useState(true);
-
+    const [ , dispatch]  = useContext(UserContext);
+    const { getItem } = useFirebase();
+ /*debido a los cambios en las consignas 3, se agregó items al firebase y se cambia el consumo de la API manejado hasta ahora
     const getItemDetails = async() => {
+       
         const url = `https://api.reverb.com/api/listings/${id}`;
         await fetch(url)
         .then(res=>res.json())
@@ -16,13 +25,34 @@ const ItemDetailContainer = ({addItems}) => {
             setDetails(res)
             setLoading(false)
         })
-      }  
+        getItem(id).then((res)=>{
+            setDetails(res)
+            setLoading(false)
+        })
+
+      }  */
+
+      const increaseCart = (e) => {
+        dispatch({
+            type: types.increase,
+            payload: {productId: id}
+        })
+        e.stopPropagation();
+    }  
 
     useEffect(() => {
-        getItemDetails();
+        getItem(id).then((res)=>{
+            setDetails(res)
+            setLoading(false)
+        }).catch(() => {
+            setError(true);
+            setLoading(false)
+        })
     }, [id])
 
-    if (loading) return 'Cargando...'
+    if (loading) return 'Loading...'
+
+    if(!details || error) return <Error404 />
 
   return (
     <div className = "card-wrapper detail">
@@ -30,7 +60,7 @@ const ItemDetailContainer = ({addItems}) => {
             <div className = "product-imgs">
                 <div className = "img-display">
                 <div className = "img-showcase">
-                    <img className='img-item-detail' src={details?.photos[0]?._links?.full?.href} alt = "shoe image" />
+                    <img className='img-item-detail' src={details.picture} alt = "shoe image" />
                 </div>
                 </div>
             </div>
@@ -39,7 +69,7 @@ const ItemDetailContainer = ({addItems}) => {
                 <a href="#" className="product-link">visit {details.shop_name} store</a>
 
                 <div className = "product-price">
-                    <p className = "new-price">Price: <span>{details.price.display}</span></p>
+                    <p className = "new-price">Price: <span>{details.price}</span></p>
                 </div>
 
                 <div className = "product-detail">
@@ -48,7 +78,7 @@ const ItemDetailContainer = ({addItems}) => {
                 </div>
 
                 <div className = "purchase-info">
-                    <button className="btn btn-primary text-white mt-auto align-self-start" onClick={addItems}>
+                    <button className="btn btn-primary text-white mt-auto align-self-start" onClick={increaseCart}>
                         Add to Cart
                     </button>
                 </div>

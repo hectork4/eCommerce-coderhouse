@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import cartIcon from '../../images/cart-icon.png'
 import cartIconHover from '../../images/cart-icon-hover.png'
 import './styles.css'
+import UserContext from '../../globalStore/UserContext';
 
-const CartWidget = ({ amount = 0 }) => {
+const CartWidget = () => {
     const [hover, setHover] = useState(false);
+    const [ userContext ] = useContext(UserContext);
+    const [amount, setAmount] = useState(0);
 
     const handleHover = () => {
         setHover(true)
@@ -14,20 +17,22 @@ const CartWidget = ({ amount = 0 }) => {
         setHover(false)
     }
 
+    useEffect(() => {
+        setAmount(userContext?.cart.length && userContext?.cart.reduce(function (acu, item) { return acu + item.amount; }, 0))
+    }, [userContext])
+
   return (
-    <a 
-        className='anchor-cart' 
-        href='#' 
+    <div
         onMouseOver={handleHover} 
         onMouseLeave={handleLeave}
     >
-        <img src={hover ? cartIconHover : cartIcon} />
+        <img alt='cart-widget' src={hover ? cartIconHover : cartIcon} />
         { !!amount &&
         <div className='amount-wrapper'>
             <span>{amount}</span>
         </div>
         }
-    </a>
+    </div>
   )
 }
 
